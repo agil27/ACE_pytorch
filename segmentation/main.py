@@ -1,12 +1,16 @@
-from segmentation import *
-from utils import image_show
+from segment import SlicSegment
 
 if __name__ == '__main__':
+  # put images of one class in source_dir/concept
   concept='bike'
   source_dir='../data/'
 
-  # put image of one class in source_dir/concept
-  dataset, image_numbers, patches = create_patches('slic',source_dir,concept)
+  slic = SlicSegment(source_dir, concept) 
+
+  # Available param in create_patches
+  # {'param1':[a,b,...], 'param2':[z,y,x,...], ...}
+  # For instance {'n_segments':[15,50,80], 'compactness':[10,10,10]}
+  image_numbers, dataset, patches = slic.create_patches()
   
   # returns: segmentations extract from the class, three level (8, 20, 30)
   # dataset: shape(num_seg, H, W, 3)  # mask on origal image
