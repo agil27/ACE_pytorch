@@ -100,7 +100,7 @@ class SlicSegment:
       patches.append(patch)
     return superpixels, patches
 
-  def _extract_patch(self, image, mask, average_image_value=117, image_shape=(229, 229)):
+  def _extract_patch(self, image, mask, average_image_value=0, image_shape=(229, 229)):
     """Extracts a patch out of an image.
 
     Args:

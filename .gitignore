@@ -1,2 +1,5 @@
 .idea
 data_test
+__pycache__
+*/__pycache__
+cluster/cluster_result
