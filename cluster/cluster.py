@@ -46,7 +46,7 @@ class cluster(object):
             data_feature = np.vstack((data_feature, features))
 
         aggModel = AgglomerativeClustering(affinity='euclidean', compute_full_tree='auto',
-                                    connectivity=None, linkage='ward', memory=None, n_clusters=5)
+                                    connectivity=None, linkage='ward', memory=None, n_clusters=2)
         aggModel = aggModel.fit(data_feature)
 
         target_list = aggModel.labels_

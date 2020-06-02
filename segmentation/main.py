@@ -1,5 +1,6 @@
+from utils import *
 from segment import SlicSegment
-
+import matplotlib.pyplot as plt
 if __name__ == '__main__':
   # put images of one class in source_dir/concept
   concept='bike'
@@ -17,8 +18,14 @@ if __name__ == '__main__':
   # image_numbers: shape(num_seg), indicates which image the segmentation comes from
   # patches: shape(num_seg, H, W, 3)  # resize the masked image to model input size, default (229, 229), change the value in def _extract_patch(... image_shape=(229, 229))
 
-  print("Segementation number: ", image_numbers.shape[0])
+  # print("Segementation number: ", image_numbers.shape[0])
   # P.S. 10 image generate about 300 segmentions
 
-  # image_show(dataset[20])
-  # image_show(patches[20])
+  image_show(dataset[21])
+  plt.savefig("tmp1.png")
+  plt.show()
+  image_show(patches[21])
+  plt.savefig("tmp2.png")
+  plt.show()
+
+

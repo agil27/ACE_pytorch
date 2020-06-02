@@ -16,7 +16,7 @@ class SlicSegment:
     Returns:
       Images of the desired concept or class.
     """
-    concept_dir = os.path.join(source_dir, concept)
+    concept_dir = os.path.join(self.source_dir, self.concept)
     img_paths = [
       os.path.join(concept_dir, d)
       for d in os.listdir(concept_dir)
