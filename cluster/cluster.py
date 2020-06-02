@@ -50,7 +50,8 @@ class cluster(object):
         target_list = aggModel.labels_
         return target_list, pic_path_list
 
-if __name__ == '__main__':
+
+def main():
     cluster_test = cluster()
 
     # param: path_name: the path to the segmented images, path format required: path_name/xxx/yyy.png
@@ -60,13 +61,15 @@ if __name__ == '__main__':
     target_list, pic_path_list = cluster_test(path_name='../data_seg_result', n_clusters=30)
     print(target_list)
 
-
     # optional:
     # save all pictures according to clustering result:
     dst_root_path = 'cluster_result'
     for index, pic_path in enumerate(pic_path_list):
-        dst_path = dst_root_path+'/%02d/'%target_list[index]
+        dst_path = dst_root_path + '/%02d/' % target_list[index]
         if not os.path.exists(dst_path):
             os.makedirs(dst_path)
 
         ttt = shutil.copy(pic_path, dst_path)
+
+if __name__ == '__main__':
+    main()
