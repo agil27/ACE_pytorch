@@ -26,6 +26,7 @@ class DeepSegment:
         # add project-specific config (e.g., TensorMask) here if you're not running a model in detectron2's core library
         cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5  # set threshold for this model
+        cfg.MODEL.DEVICE = "cpu"
         # Find a model from detectron2's model zoo. You can use the https://dl.fbaipublicfiles... url as well
         cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
         self.predictor = DefaultPredictor(cfg)
@@ -54,14 +55,15 @@ class DeepSegment:
     def create_patches(self):
         dataset, image_numbers, patches = [], [], []
 
-        raw_imgs = self.load_concept_imgs()
+        raw_imgs = self.load_concept_imgs() * 255
+        raw_imgs = raw_imgs.astype(np.uint8)
 
         for index, img in enumerate(raw_imgs):
             outputs = self.predictor(img)
-            boxes = outputs['instances'].pred_boxes.numpy()
+            boxes = outputs['instances'].pred_boxes.tensor.numpy()
             for box in boxes:
-                patch = self._extract_patch(img, box)
-                dataset.append(img)
+                img1, patch = self._extract_patch(img, box)
+                dataset.append(img1)
                 patches.append(patch)
                 image_numbers.append(index)
 
@@ -75,8 +77,9 @@ class DeepSegment:
         y1 = int(box[1])
         x2 = int(box[2])
         y2 = int(box[3])
-        patch = Image.fromarray((img[x1:x2, y1:y2] * 255).astype(np.unit8))
-        patch = np.array(patch.resize(image_shape, Image.BICUBIC)).astype(float) / 255
+        patch = Image.fromarray((img[x1:x2, y1:y2] * 255).astype(np.uint8))
+        patch = np.array(patch.resize(image_shape, Image.BICUBIC)).astype(np.float) / 255
+        img = img.astype(np.float) / 255
         return img, patch
 
 
