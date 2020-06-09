@@ -7,9 +7,9 @@ class ModelWrapper(object):
         self.model = deepcopy(model)
         self.intermediate_activations = {}
         for name, module in self.model._modules.items():
-            if name in layers.keys():
+            if name in layers:
                 # define the hook function
-                def save_activation(name, input, output):
+                def save_activation(mod, input, output):
                     self.intermediate_activations[name] = output
                 # register the hook
                 module.register_forward_hook(save_activation)

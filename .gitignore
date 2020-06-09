@@ -1,6 +1,9 @@
 .idea
 .vscode*
+data*
 data_test
 __pycache__
 */__pycache__
 .history*
+*.ipynb_checkpoints*
+data_seg_result*
