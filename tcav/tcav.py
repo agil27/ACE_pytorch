@@ -11,7 +11,7 @@ def directional_derivative(model, x, cav, layer_name, class_name):
 
 
 def tcav_score(model, data_loader, class_name, cav, layer_name):
-    derivatives = [directional_derivative(model, x, cav, layer_name, class_name) for x in data_loader]
+    derivatives = [directional_derivative(model, x, cav, layer_name, class_name) for x, _ in data_loader]
     score = np.array(derivatives).astype(np.int).sum(axis=0) / len(derivatives)
     return score
 

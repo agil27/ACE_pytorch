@@ -11,6 +11,20 @@ import torchvision
 from torchvision import datasets, transforms
 from model import Resnet18
 from tcav import TCAV
+from model_wrapper import ModelWrapper
+from mydata import MyDataset
+
+
+def data_loader(base_path, class_name):
+    data_transforms = transforms.Compose([
+        # transforms.Resize(self.input_size),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ])
+    image_dataset_train = MyDataset(base_path, class_name, transform=data_transforms)
+    train_loader = DataLoader(image_dataset_train, batch_size=32)
+    return train_loader
+
 
 def train():
     best_weights = model.state_dict()
@@ -46,13 +60,16 @@ def train():
     # save model parameters
     torch.save(best_weights, 'resnet18_office.pth')
 
-def validate():
+
+def validate(model):
     model.eval()
-    model.load_state_dict(torch.load('resnet18_office.pth'))
-    # TODO: Create DataLoaders for Broden concepts and train TCAV
+    weights = torch.load('resnet18_office.pth')
+    print(model)
+    model.load_state_dict(weights)
+    model = feature_layers
+
 
 if __name__ == "__main__":
-    #os.environ["CUDA_VISIBLE_DEVICES"] ='5'
     use_gpu = torch.cuda.is_available()
     if use_gpu:
         device = torch.device("cuda")
@@ -66,19 +83,23 @@ if __name__ == "__main__":
     ])
 
     image_dataset = datasets.ImageFolder('data/amazon', data_transforms)
-    train_size = int(len(image_dataset)*0.8)
+    train_size = int(len(image_dataset) * 0.8)
     train_data, test_data = torch.utils.data.random_split(image_dataset, [train_size, len(image_dataset) - train_size])
-    trainloader = DataLoader(train_data, batch_size=128, shuffle=True, num_workers=8)
-    testloader = DataLoader(test_data, batch_size=256, shuffle=False, num_workers=4)
+    trainloader = DataLoader(train_data, batch_size=1, shuffle=True, num_workers=8)
+    testloader = DataLoader(test_data, batch_size=1, shuffle=False, num_workers=4)
 
-    concept_dataset = datasets.ImageFolder('data/cluster_result/bike', data_transforms)
-    concept_loader = DataLoader(concept_dataset, batch_size=128, shuffle=False, num_workers=8)
+    # concept_dataset = datasets.ImageFolder('data/cluster_result/bike', data_transforms)
+    # concept_loader = DataLoader(concept_dataset, batch_size=128, shuffle=False, num_workers=8)
+    concept_dict = {}
+    concept_dict['screen'] = data_loader('data/cluster_result/phone', '02')
+    concept_dict['key'] = data_loader('data/cluster_result/phone', '05')
 
+    print(concept_dict.keys())
     model = Resnet18(output_num=31)
     model = model.to(device)
     criterion = CrossEntropyLoss()
     optimizer = Adam(model.parameters(), lr=0.0001)
 
-    train()
-    #validate()
-    #print(concept_loader.dataset)
+    # train()
+    validate(model)
+    # print(concept_loader.dataset)
