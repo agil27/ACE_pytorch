@@ -7,12 +7,14 @@ import os
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--concept', default='bike')
+parser.add_argument('--src', default='data/amazon')
 
 args = parser.parse_args()
+
 if __name__ == '__main__':
     # put images of one class in source_dir/concept
-    concept='bike'
-    source_dir='data/'
+    concept=args.concept
+    source_dir=args.src
 
     slic = SlicSegment(source_dir, concept) 
     #slic = DeepSegment(source_dir, concept) 
@@ -29,9 +31,9 @@ if __name__ == '__main__':
 
     # print("Segementation number: ", image_numbers.shape[0])
     # P.S. 10 image generate about 300 segmentions
-    result_path = 'data_seg_result/'+concept
+    result_path = 'data/seg_result/'+concept
     if not os.path.exists(result_path):
-        os.mkdir(result_path)
+        os.makedirs(result_path)
 
     for i in range(len(dataset)):
         matplotlib.image.imsave(result_path+'/'+str(i)+'.png', dataset[i])    
