@@ -16,8 +16,7 @@ args = parser.parse_args()
 
 class cluster(object):
     def __init__(self):
-        self.CLUSTER_K = 4
-        self.input_size = [24,24]
+        self.input_size = [128,128]
         self.batch_size = 32
         self.activation_feature = None
     def resnet_feature(self):
@@ -45,9 +44,11 @@ class cluster(object):
         model = self.resnet_feature()
         data_feature = np.ndarray(shape=[0,512])
         for inputs, filenames in train_loader:
+            print(inputs[0].shape)
             model(inputs)
             features = torch.flatten(self.activation_feature,1).numpy()
             data_feature = np.vstack((data_feature, features))
+        #print(data_feature.shape)
         aggModel = AgglomerativeClustering(affinity='euclidean', compute_full_tree='auto',
                                     connectivity=None, linkage='ward', memory=None, n_clusters=n_clusters)
         aggModel = aggModel.fit(data_feature)
