@@ -85,8 +85,8 @@ if __name__ == "__main__":
     image_dataset = datasets.ImageFolder('data/amazon', data_transforms)
     train_size = int(len(image_dataset) * 0.8)
     train_data, test_data = torch.utils.data.random_split(image_dataset, [train_size, len(image_dataset) - train_size])
-    trainloader = DataLoader(train_data, batch_size=1, shuffle=True, num_workers=8)
-    testloader = DataLoader(test_data, batch_size=1, shuffle=False, num_workers=4)
+    trainloader = DataLoader(train_data, batch_size=128, shuffle=True, num_workers=8)
+    testloader = DataLoader(test_data, batch_size=256, shuffle=False, num_workers=4)
 
     # concept_dataset = datasets.ImageFolder('data/cluster_result/bike', data_transforms)
     # concept_loader = DataLoader(concept_dataset, batch_size=128, shuffle=False, num_workers=8)
@@ -100,6 +100,6 @@ if __name__ == "__main__":
     criterion = CrossEntropyLoss()
     optimizer = Adam(model.parameters(), lr=0.0001)
 
-    # train()
-    validate(model)
+    train()
+    #validate(model)
     # print(concept_loader.dataset)
